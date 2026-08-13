@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Ли Сян — товары</title>
+<style>
+  :root{
+    --bg:#f2f2f7;
+    --card:#ffffff;
+    --text:#1c1c1e;
+    --sub:#8e8e93;
+    --blue:#007aff;
+    --green:#34c759;
+    --red:#ff3b30;
+    --orange:#ff9500;
+    --sep:#e5e5ea;
+    --radius:16px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding-bottom:calc(24px + env(safe-area-inset-bottom));
+    -webkit-font-smoothing:antialiased;
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(242,242,247,0.85);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    padding:calc(14px + env(safe-area-inset-top)) 16px 10px;
+    border-bottom:0.5px solid var(--sep);
+  }
+  h1{font-size:22px;font-weight:700;margin:0 0 2px;letter-spacing:-0.02em;}
+  .subtitle{font-size:13px;color:var(--sub);margin:0;}
+
+  .stats{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:14px 16px 4px;
+  }
+  .stat{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:14px;
+  }
+  .stat .label{font-size:12px;color:var(--sub);font-weight:500;}
+  .stat .value{font-size:20px;font-weight:700;margin-top:2px;letter-spacing:-0.02em;}
+  .stat .value.green{color:var(--green);}
+  .stat .value.blue{color:var(--blue);}
+
+  .toolbar{
+    display:flex; gap:8px; padding:14px 16px 6px; align-items:center;
+  }
+  .search{
+    flex:1;
+    background:var(--card);
+    border:none;
+    border-radius:12px;
+    padding:10px 12px;
+    font-size:15px;
+    color:var(--text);
+  }
+  .search::placeholder{color:var(--sub);}
+  .iconbtn{
+    background:var(--card);
+    border:none;
+    border-radius:12px;
+    width:40px;height:40px;
+    font-size:18px;
+    color:var(--blue);
+  }
+
+  .section-label{
+    font-size:13px; color:var(--sub); text-transform:uppercase; letter-spacing:0.03em;
+    padding:16px 16px 6px;
+    font-weight:600;
+  }
+
+  .list{padding:0 16px; display:flex; flex-direction:column; gap:10px;}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    overflow:hidden;
+    box-shadow:0 1px 2px rgba(0,0,0,0.04);
+  }
+  .card-head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 14px;
+    gap:10px;
+  }
+  .card-head .name{
+    font-size:16px; font-weight:600; line-height:1.25;
+  }
+  .card-head .variant{
+    font-size:13px; color:var(--sub); margin-top:2px;
+  }
+  .card-head .chevron{
+    color:var(--sub); font-size:14px; transition:transform .2s ease; flex:none;
+  }
+  .card.open .chevron{transform:rotate(90deg);}
+
+  .card-quick{
+    display:flex; gap:10px; padding:0 14px 14px; font-size:13px; color:var(--sub); flex-wrap:wrap;
+  }
+  .pill{
+    background:var(--bg);
+    border-radius:8px;
+    padding:4px 8px;
+    font-weight:600;
+    color:var(--text);
+  }
+  .pill.profit{color:var(--green);}
+  .pill.stock0{color:var(--red);}
+
+  .card-body{
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .25s ease;
+    border-top:0.5px solid var(--sep);
+  }
+  .card.open .card-body{max-height:900px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    padding:14px;
+  }
+  .field{
+    display:flex; flex-direction:column; gap:4px;
+  }
+  .field label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:0.02em;}
+  .field input{
+    border:1px solid var(--sep);
+    background:var(--bg);
+    border-radius:10px;
+    padding:9px 10px;
+    font-size:15px;
+    color:var(--text);
+    width:100%;
+  }
+  .field input:focus{outline:none; border-color:var(--blue); background:#fff;}
+  .field.readonly input{color:var(--sub); background:#f7f7f9;}
+
+  .divider-label{
+    grid-column:1 / -1;
+    font-size:11px; color:var(--sub); font-weight:700; text-transform:uppercase;
+    margin-top:6px; letter-spacing:0.03em;
+  }
+
+  .summary-row{
+    display:flex; justify-content:space-between;
+    padding:10px 14px; font-size:14px;
+    border-top:0.5px solid var(--sep);
+  }
+  .summary-row .l{color:var(--sub);}
+  .summary-row .r{font-weight:700;}
+  .summary-row .r.green{color:var(--green);}
+
+  .footer-actions{
+    display:flex; gap:10px; padding:18px 16px 8px;
+  }
+  .btn{
+    flex:1;
+    border:none;
+    border-radius:12px;
+    padding:12px;
+    font-size:15px;
+    font-weight:600;
+    text-align:center;
+  }
+  .btn.primary{background:var(--blue); color:#fff;}
+  .btn.secondary{background:var(--card); color:var(--blue);}
+  .footer-note{
+    font-size:12px; color:var(--sub); text-align:center; padding:4px 24px 4px;
+    line-height:1.5;
+  }
+  #fileInput{display:none;}
+  .empty{
+    text-align:center; color:var(--sub); font-size:14px; padding:40px 20px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Ли Сян — товары</h1>
+  <p class="subtitle" id="subtitle">14 товаров</p>
+</header>
+
+<div class="stats" id="stats"></div>
+
+<div class="toolbar">
+  <input class="search" id="search" placeholder="Поиск по названию..." />
+  <button class="iconbtn" id="addBtn" title="Добавить товар">＋</button>
+</div>
+
+<div class="section-label">Товары</div>
+<div class="list" id="list"></div>
+
+<div class="footer-actions">
+  <button class="btn secondary" id="exportBtn">Экспорт (JSON)</button>
+  <button class="btn primary" id="importBtn">Импорт</button>
+</div>
+<input type="file" id="fileInput" accept="application/json">
+<p class="footer-note">Изменения сохраняются, пока открыта эта страница. Чтобы сохранить их насовсем — нажми «Экспорт» и пришли файл в чат, я обновлю таблицу.</p>
+
+<script>
+const RAW_DATA = [
+{id:1, code:'Код 1', name:'Полики в багажник', kaspi:'Защита багажника', variant:'', note:'проверить', price:40000, qty:3, costYuan:390, rate:70, weight:8200, tariff:1800, deliveryExtra:2000, packaging:100, stock:3, sold:0},
+{id:2, code:'Код 2', name:'Сетка в багажник', kaspi:'Сетка', variant:'', note:'', price:9900, qty:3, costYuan:78, rate:70, weight:1100, tariff:1800, deliveryExtra:1000, packaging:100, stock:3, sold:0},
+{id:3, code:'Код 3', name:'Силиконовые формы в холодильник 3 штуки в комплекте', kaspi:'Органайзер в холодильник', variant:'', note:'', price:11500, qty:2, costYuan:63, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:4, code:'Код 4', name:'Защита для холодильника внешняя', kaspi:'', variant:'черный', note:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:5, code:'Код 5', name:'Защита для холодильника внешняя', kaspi:'', variant:'оранжевый', note:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:6, code:'Код 6', name:'Пепельница', kaspi:'', variant:'пластик', note:'проверить', price:3000, qty:2, costYuan:19, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, stock:2, sold:0},
+{id:7, code:'Код 7', name:'Накладки на педали 3 штуки в комплекте', kaspi:'', variant:'металл', note:'', price:15000, qty:2, costYuan:129, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:8, code:'Код 8', name:'Набор наппа для ухода за кожей', kaspi:'', variant:'', note:'проверить', price:7000, qty:2, costYuan:63, rate:70, weight:1100, tariff:1800, deliveryExtra:500, packaging:100, stock:2, sold:0},
+{id:9, code:'Код 9', name:'Визитница', kaspi:'', variant:'металл', note:'проверить', price:5000, qty:4, costYuan:47, rate:70, weight:400, tariff:1800, deliveryExtra:500, packaging:100, stock:4, sold:0},
+{id:10, code:'Код 10', name:'Колпачки на колесные гайки с наклейками Ли', kaspi:'', variant:'АВС пластик', note:'', price:5000, qty:3, costYuan:54, rate:70, weight:230, tariff:1800, deliveryExtra:500, packaging:100, stock:3, sold:0},
+{id:11, code:'Код 11', name:'Магнитные крышки в порт зарядки', kaspi:'', variant:'', note:'', price:5000, qty:3, costYuan:36, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, stock:3, sold:0},
+{id:12, code:'Код 12', name:'Подлокотники на скотче', kaspi:'', variant:'черный', note:'', price:9900, qty:2, costYuan:96, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:13, code:'Код 13', name:'Подлокотники на резинке', kaspi:'', variant:'оранжевый', note:'', price:15000, qty:2, costYuan:168, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, stock:2, sold:0},
+{id:14, code:'Код 14', name:'Силиконовые накладки на дверной замок 4 штуки в комплекте', kaspi:'', variant:'', note:'', price:8000, qty:3, costYuan:54, rate:70, weight:200, tariff:1800, deliveryExtra:1000, packaging:100, stock:3, sold:0},
+];
+
+// deep clone as working state
+let data = JSON.parse(JSON.stringify(RAW_DATA));
+let openId = null;
+
+const fmt = n => Math.round(n).toLocaleString('ru-RU');
+
+function calc(item){
+  const p = item.qty > 0 ? Math.round(item.costYuan / item.qty) : 0;           // цена за ед, юань
+  const r = Math.round(p * item.rate);                                        // закупочная цена за ед, тенге
+  const u = Math.round((item.weight / 1000) * item.tariff);                   // стоимость доставки всего
+  const v = item.qty > 0 ? Math.round(u / item.qty) : 0;                      // доставка за ед
+  const y = Math.round(item.price * 0.12);                                    // комиссия 12%
+  const z = Math.round(item.price * 0.01);                                    // платежи 1%
+  const ab = Math.round(item.price * 0.04);                                   // налог 4%
+  const n = r + v + item.deliveryExtra + item.packaging + y + z + ab;         // себестоимость
+  const i = item.price - n;                                                   // прибыль, тенге
+  const h = item.price > 0 ? Math.round((i / item.price) * 100) : 0;          // прибыль, %
+  return {p, r, u, v, y, z, ab, n, i, h};
+}
+
+function renderStats(){
+  const totalStock = data.reduce((s,x)=>s+x.stock,0);
+  const totalSold = data.reduce((s,x)=>s+x.sold,0);
+  let totalProfitPotential = 0, totalInvValue = 0;
+  data.forEach(x=>{
+    const c = calc(x);
+    totalProfitPotential += c.i * x.stock;
+    totalInvValue += c.n * x.stock;
+  });
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="label">Товаров</div><div class="value">${data.length}</div></div>
+    <div class="stat"><div class="label">Остаток на складе</div><div class="value blue">${totalStock} шт</div></div>
+    <div class="stat"><div class="label">Потенциальная прибыль</div><div class="value green">${fmt(totalProfitPotential)} ₸</div></div>
+    <div class="stat"><div class="label">Стоимость остатков</div><div class="value">${fmt(totalInvValue)} ₸</div></div>
+  `;
+  document.getElementById('subtitle').textContent = `${data.length} товаров · ${totalStock} шт в наличии`;
+}
+
+function fieldRow(label, key, item, readonly, suffix){
+  const val = item[key];
+  return `<div class="field ${readonly?'readonly':''}">
+    <label>${label}</label>
+    <input type="${readonly?'text':'number'}" inputmode="decimal" data-key="${key}" ${readonly?'readonly':''} value="${readonly? val : val}">
+  </div>`;
+}
+
+function renderList(){
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const listEl = document.getElementById('list');
+  const filtered = data.filter(x => (x.name + ' ' + x.variant + ' ' + x.kaspi).toLowerCase().includes(q));
+  if(!filtered.length){
+    listEl.innerHTML = `<div class="empty">Ничего не найдено</div>`;
+    return;
+  }
+  listEl.innerHTML = filtered.map(item=>{
+    const c = calc(item);
+    const isOpen = openId === item.id;
+    return `
+    <div class="card ${isOpen?'open':''}" data-id="${item.id}">
+      <div class="card-head" data-toggle="${item.id}">
+        <div>
+          <div class="name">${item.name}${item.variant ? ' · ' + item.variant : ''}</div>
+          <div class="variant">${item.code}${item.note ? ' · ' + item.note : ''}</div>
+        </div>
+        <div class="chevron">›</div>
+      </div>
+      <div class="card-quick">
+        <span class="pill">${fmt(item.price)} ₸</span>
+        <span class="pill profit">${c.h}% · ${fmt(c.i)} ₸</span>
+        <span class="pill ${item.stock===0?'stock0':''}">Остаток: ${item.stock}</span>
+        <span class="pill">Продано: ${item.sold}</span>
+      </div>
+      <div class="card-body">
+        <div class="grid">
+          <div class="divider-label">Продажа и склад</div>
+          ${fieldRow('Цена продажи, ₸','price',item,false)}
+          ${fieldRow('Остаток, шт','stock',item,false)}
+          ${fieldRow('Продано, шт','sold',item,false)}
+          ${fieldRow('Количество в закупке','qty',item,false)}
+
+          <div class="divider-label">Закупка</div>
+          ${fieldRow('Стоимость закупки, ¥','costYuan',item,false)}
+          ${fieldRow('Курс ¥→₸','rate',item,false)}
+          <div class="field readonly"><label>Цена за ед., ¥</label><input readonly value="${c.p}"></div>
+          <div class="field readonly"><label>Цена за ед., ₸</label><input readonly value="${fmt(c.r)}"></div>
+
+          <div class="divider-label">Доставка</div>
+          ${fieldRow('Общий вес, г','weight',item,false)}
+          ${fieldRow('Тариф доставки','tariff',item,false)}
+          <div class="field readonly"><label>Доставка всего, ₸</label><input readonly value="${fmt(c.u)}"></div>
+          <div class="field readonly"><label>Доставка за ед., ₸</label><input readonly value="${fmt(c.v)}"></div>
+          ${fieldRow('Доп. доставка, ₸','deliveryExtra',item,false)}
+          ${fieldRow('Упаковка, ₸','packaging',item,false)}
+
+          <div class="divider-label">Расчёт</div>
+          <div class="field readonly"><label>Комиссия Каспи 12%</label><input readonly value="${fmt(c.y)}"></div>
+          <div class="field readonly"><label>Платежи 1%</label><input readonly value="${fmt(c.z)}"></div>
+          <div class="field readonly"><label>Налог 4%</label><input readonly value="${fmt(c.ab)}"></div>
+        </div>
+        <div class="summary-row"><span class="l">Себестоимость</span><span class="r">${fmt(c.n)} ₸</span></div>
+        <div class="summary-row"><span class="l">Прибыль с единицы</span><span class="r green">${fmt(c.i)} ₸ (${c.h}%)</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function render(){
+  renderStats();
+  renderList();
+}
+
+document.getElementById('list').addEventListener('click', (e)=>{
+  const head = e.target.closest('[data-toggle]');
+  if(head){
+    const id = Number(head.dataset.toggle);
+    openId = openId === id ? null : id;
+    renderList();
+  }
+});
+
+document.getElementById('list').addEventListener('input', (e)=>{
+  const input = e.target.closest('input[data-key]');
+  if(!input) return;
+  const card = e.target.closest('.card');
+  const id = Number(card.dataset.id);
+  const item = data.find(x=>x.id===id);
+  const key = input.dataset.key;
+  const num = parseFloat(input.value.replace(',', '.'));
+  item[key] = isNaN(num) ? 0 : num;
+  renderStats();
+  // re-render just this card's computed fields without losing focus: simplest safe approach is partial refresh
+  const c = calc(item);
+  card.querySelectorAll('.field.readonly input').forEach((el, idx)=>{});
+  // update quick pills and readonly fields in place
+  const quick = card.querySelector('.card-quick');
+  quick.innerHTML = `
+    <span class="pill">${fmt(item.price)} ₸</span>
+    <span class="pill profit">${c.h}% · ${fmt(c.i)} ₸</span>
+    <span class="pill ${item.stock===0?'stock0':''}">Остаток: ${item.stock}</span>
+    <span class="pill">Продано: ${item.sold}</span>
+  `;
+  const readonlyInputs = card.querySelectorAll('.field.readonly input');
+  const vals = [c.p, fmt(c.r), fmt(c.u), fmt(c.v), fmt(c.y), fmt(c.z), fmt(c.ab)];
+  readonlyInputs.forEach((el,idx)=>{ if(vals[idx]!==undefined) el.value = vals[idx]; });
+  const summaryVals = card.querySelectorAll('.summary-row .r');
+  summaryVals[0].textContent = fmt(c.n) + ' ₸';
+  summaryVals[1].textContent = fmt(c.i) + ' ₸ (' + c.h + '%)';
+});
+
+document.getElementById('search').addEventListener('input', renderList);
+
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'lisyang_tovary.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('importBtn').addEventListener('click', ()=>{
+  document.getElementById('fileInput').click();
+});
+document.getElementById('fileInput').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const parsed = JSON.parse(reader.result);
+      if(Array.isArray(parsed)){ data = parsed; render(); }
+    }catch(err){ alert('Не удалось прочитать файл'); }
+  };
+  reader.readAsText(file);
+});
+
+document.getElementById('addBtn').addEventListener('click', ()=>{
+  const newId = Math.max(0, ...data.map(x=>x.id)) + 1;
+  data.push({id:newId, code:'Код '+newId, name:'Новый товар', kaspi:'', variant:'', note:'', price:0, qty:1, costYuan:0, rate:70, weight:0, tariff:1800, deliveryExtra:0, packaging:100, stock:0, sold:0});
+  openId = newId;
+  render();
+});
+
+render();
+</script>
+</body>
+</html>
