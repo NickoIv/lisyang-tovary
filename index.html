@@ -2,233 +2,169 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#faf6f0">
 <title>Ли Сян — товары</title>
 <style>
   :root{
-    --bg:#f2f2f7;
-    --card:#ffffff;
-    --text:#1c1c1e;
-    --sub:#8e8e93;
-    --blue:#007aff;
-    --green:#34c759;
-    --red:#ff3b30;
-    --orange:#ff9500;
-    --sep:#e5e5ea;
-    --radius:16px;
+    --bg:#faf6f0; --card:#ffffff; --text:#2b2320; --sub:#9a8f85;
+    --peach:#ff8a5c; --teal:#2fb8a6; --purple:#8a7dff;
+    --green:#3ab672; --red:#ff5a5f; --sep:#efe6dc; --radius:20px;
   }
-  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-  html,body{margin:0;padding:0;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation;}
+  html{-webkit-text-size-adjust:100%;}
+  html,body{margin:0;padding:0; overflow-x:hidden; width:100%;}
   body{
-    background:var(--bg);
-    color:var(--text);
+    background:var(--bg); color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
     padding-bottom:calc(24px + env(safe-area-inset-bottom));
     -webkit-font-smoothing:antialiased;
   }
   header{
     position:sticky; top:0; z-index:10;
-    background:rgba(242,242,247,0.85);
-    backdrop-filter:blur(20px);
-    -webkit-backdrop-filter:blur(20px);
-    padding:calc(14px + env(safe-area-inset-top)) 16px 10px;
-    border-bottom:0.5px solid var(--sep);
+    background:rgba(250,246,240,0.85); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+    padding:calc(14px + env(safe-area-inset-top)) 18px 12px;
   }
-  h1{font-size:22px;font-weight:700;margin:0 0 2px;letter-spacing:-0.02em;}
-  .subtitle{font-size:13px;color:var(--sub);margin:0; display:flex; justify-content:space-between; align-items:center; gap:8px;}
-  .saved-badge{font-size:11px; color:var(--green); font-weight:600; opacity:0; transition:opacity .3s ease; white-space:nowrap;}
+  h1{font-size:24px; font-weight:800; margin:0 0 2px; letter-spacing:-0.02em;}
+  .subtitle{font-size:13px; color:var(--sub); margin:0; display:flex; justify-content:space-between; align-items:center; gap:8px;}
+  .saved-badge{font-size:11px; color:var(--green); font-weight:700; opacity:0; transition:opacity .3s ease; white-space:nowrap;}
   .saved-badge.show{opacity:1;}
 
-  .stats{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    padding:14px 16px 4px;
+  .alert{
+    margin:14px 16px 0; padding:12px 14px; border-radius:14px;
+    background:linear-gradient(135deg,#ff9a6c,#ff6f5c); color:#fff;
+    font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px;
   }
-  .stat{
-    background:var(--card);
-    border-radius:var(--radius);
-    padding:14px;
-  }
-  .stat .label{font-size:12px;color:var(--sub);font-weight:500;}
-  .stat .value{font-size:20px;font-weight:700;margin-top:2px;letter-spacing:-0.02em;}
-  .stat .value.green{color:var(--green);}
-  .stat .value.blue{color:var(--blue);}
 
-  .toolbar{
-    display:flex; gap:8px; padding:14px 16px 6px; align-items:center;
-  }
-  .search{
-    flex:1;
-    background:var(--card);
-    border:none;
-    border-radius:12px;
-    padding:10px 12px;
-    font-size:15px;
-    color:var(--text);
-  }
+  .stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:16px 16px 4px;}
+  .stat{border-radius:var(--radius); padding:16px; color:#fff;}
+  .stat.c1{background:linear-gradient(135deg,#ff9a6c,#ff6f5c);}
+  .stat.c2{background:linear-gradient(135deg,#37c9b3,#2596a0);}
+  .stat.c3{background:linear-gradient(135deg,#3ecb82,#25a865);}
+  .stat.c4{background:linear-gradient(135deg,#9b8dff,#6f6bd8);}
+  .stat .icon{font-size:18px; margin-bottom:6px;}
+  .stat .label{font-size:12px; font-weight:700; opacity:.9;}
+  .stat .value{font-size:21px; font-weight:800; margin-top:3px; letter-spacing:-0.02em;}
+
+  .toolbar{display:flex; gap:8px; padding:16px 16px 10px;}
+  .search{flex:1; min-width:0; background:var(--card); border:1.5px solid var(--sep); border-radius:16px; padding:12px 14px; font-size:16px; color:var(--text);}
   .search::placeholder{color:var(--sub);}
-  .iconbtn{
-    background:var(--card);
-    border:none;
-    border-radius:12px;
-    width:40px;height:40px;
-    font-size:18px;
-    color:var(--blue);
-  }
+  .iconbtn{background:var(--peach); border:none; border-radius:16px; width:44px; height:44px; font-size:20px; color:#fff; font-weight:600; flex:none;}
 
-  .section-label{
-    font-size:13px; color:var(--sub); text-transform:uppercase; letter-spacing:0.03em;
-    padding:16px 16px 6px;
-    font-weight:600;
+  .chips{display:flex; gap:8px; padding:0 16px 14px; overflow-x:auto; -webkit-overflow-scrolling:touch; scroll-padding:0 16px;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chips::after{content:''; flex:none; width:4px;}
+  .chip{
+    flex:none; background:var(--card); border:1.5px solid var(--sep); color:var(--sub);
+    border-radius:14px; padding:9px 14px; font-size:13px; font-weight:700; white-space:nowrap;
+    min-height:38px;
   }
+  .chip.active{background:var(--peach); border-color:var(--peach); color:#fff;}
 
-  .list{padding:0 16px; display:flex; flex-direction:column; gap:10px;}
+  .section-label{font-size:13px; color:var(--sub); text-transform:uppercase; letter-spacing:0.04em; padding:8px 18px 8px; font-weight:700;}
 
-  .card{
-    background:var(--card);
-    border-radius:var(--radius);
-    overflow:hidden;
-    box-shadow:0 1px 2px rgba(0,0,0,0.04);
-  }
-  .card-head{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 14px;
-    gap:10px;
-  }
-  .card-head .name{
-    font-size:16px; font-weight:600; line-height:1.25;
-  }
-  .card-head .variant{
-    font-size:13px; color:var(--sub); margin-top:2px;
-  }
-  .card-head .chevron{
-    color:var(--sub); font-size:14px; transition:transform .2s ease; flex:none;
-  }
+  .list{padding:0 16px; display:flex; flex-direction:column; gap:12px;}
+
+  .card{background:var(--card); border-radius:var(--radius); overflow:hidden; box-shadow:0 4px 14px rgba(160,120,90,0.08); border-left:5px solid var(--peach);}
+  .card.c-teal{border-left-color:var(--teal);}
+  .card.c-purple{border-left-color:var(--purple);}
+
+  .card-head{display:flex; align-items:center; padding:16px; gap:12px;}
+  .emoji{font-size:21px; background:#fff3ec; border-radius:12px; width:40px; height:40px; display:flex; align-items:center; justify-content:center; flex:none;}
+  .card.c-teal .emoji{background:#e6f8f5;}
+  .card.c-purple .emoji{background:#f1efff;}
+  .card-head .titles{flex:1; min-width:0;}
+  .card-head .name{font-size:15.5px; font-weight:700; line-height:1.3;}
+  .card-head .variant{font-size:12.5px; color:var(--sub); margin-top:2px;}
+  .chevron{color:var(--sub); font-size:15px; transition:transform .2s ease; flex:none;}
   .card.open .chevron{transform:rotate(90deg);}
 
-  .card-quick{
-    display:flex; gap:10px; padding:0 14px 14px; font-size:13px; color:var(--sub); flex-wrap:wrap;
-  }
-  .pill{
-    background:var(--bg);
-    border-radius:8px;
-    padding:4px 8px;
-    font-weight:600;
-    color:var(--text);
-  }
-  .pill.profit{color:var(--green);}
-  .pill.stock0{color:var(--red);}
+  .card-quick{display:flex; gap:8px; padding:0 16px 16px 68px; font-size:12px; color:var(--sub); flex-wrap:wrap;}
+  .pill{background:#f7f1ea; border-radius:10px; padding:5px 10px; font-weight:700; color:var(--text);}
+  .pill.profit{color:var(--green); background:#e9f9ef;}
+  .pill.stock0{color:var(--red); background:#ffecec;}
+  .pill.link{color:var(--peach); background:#fff3ec;}
 
-  .card-body{
-    max-height:0;
-    overflow:hidden;
-    transition:max-height .25s ease;
-    border-top:0.5px solid var(--sep);
-  }
-  .card.open .card-body{max-height:1200px;}
+  .card-body{max-height:0; overflow:hidden; transition:max-height .25s ease; border-top:1px solid var(--sep);}
+  .card.open .card-body{max-height:1500px;}
 
-  .stock-panel{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px; gap:10px; background:var(--bg);
-  }
-  .stock-panel .remaining{
-    font-size:26px; font-weight:700; letter-spacing:-0.02em;
-  }
-  .stock-panel .remaining.zero{color:var(--red);}
-  .stock-panel .remaining-label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase;}
-  .stepper{
-    display:flex; align-items:center; gap:8px;
-  }
-  .stepbtn{
-    width:36px; height:36px;
-    border-radius:10px;
-    border:none;
-    background:var(--card);
-    color:var(--blue);
-    font-size:18px;
-    font-weight:700;
-    box-shadow:0 1px 2px rgba(0,0,0,0.06);
-  }
-  .stepbtn:active{background:var(--sep);}
+  .stock-panel{display:flex; align-items:center; justify-content:space-between; padding:16px; background:#fff8f2;}
+  .remaining-label{font-size:11px; color:var(--sub); font-weight:700; text-transform:uppercase;}
+  .remaining{font-size:30px; font-weight:800; color:var(--peach);}
+  .remaining.zero{color:var(--red);}
+  .stepper-label{font-size:10.5px; color:var(--sub); text-align:center; font-weight:700; margin-bottom:4px;}
+  .stepbtn{width:44px; height:44px; border-radius:12px; border:none; background:#fff; color:var(--peach); font-size:20px; font-weight:800; box-shadow:0 2px 6px rgba(160,120,90,0.12);}
+  .stepbtn:active{transform:scale(0.94);}
   .stepbtn.receive{color:var(--green);}
-  .stepper .stepper-label{font-size:11px;color:var(--sub); text-align:center; font-weight:600;}
 
-  .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    padding:14px;
-  }
-  .field{
-    display:flex; flex-direction:column; gap:4px;
-  }
-  .field label{font-size:11px; color:var(--sub); font-weight:600; text-transform:uppercase; letter-spacing:0.02em;}
-  .field input{
-    border:1px solid var(--sep);
-    background:var(--bg);
-    border-radius:10px;
-    padding:9px 10px;
-    font-size:15px;
-    color:var(--text);
-    width:100%;
-  }
-  .field input:focus{outline:none; border-color:var(--blue); background:#fff;}
-  .field.readonly input{color:var(--sub); background:#f7f7f9;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:16px;}
+  .field{display:flex; flex-direction:column; gap:5px;}
+  .field label{font-size:10.5px; color:var(--sub); font-weight:700; text-transform:uppercase; letter-spacing:0.02em;}
+  .field input{border:1.5px solid var(--sep); background:#fdfaf6; border-radius:12px; padding:11px 12px; font-size:16px; font-weight:600; color:var(--text); width:100%;}
+  .field input:focus{outline:none; border-color:var(--peach); background:#fff;}
+  .field.readonly input{color:var(--sub); background:#f7f1ea; border-color:transparent; font-weight:500;}
+  .field.wide{grid-column:1/-1;}
+  .divider-label{grid-column:1/-1; font-size:11px; color:var(--peach); font-weight:800; text-transform:uppercase; margin-top:6px; letter-spacing:0.03em;}
 
-  .divider-label{
-    grid-column:1 / -1;
-    font-size:11px; color:var(--sub); font-weight:700; text-transform:uppercase;
-    margin-top:6px; letter-spacing:0.03em;
-  }
-
-  .summary-row{
-    display:flex; justify-content:space-between;
-    padding:10px 14px; font-size:14px;
-    border-top:0.5px solid var(--sep);
-  }
+  .summary-row{display:flex; justify-content:space-between; padding:11px 16px; font-size:14px; border-top:1px solid var(--sep);}
   .summary-row .l{color:var(--sub);}
-  .summary-row .r{font-weight:700;}
+  .summary-row .r{font-weight:800;}
   .summary-row .r.green{color:var(--green);}
 
-  .footer-actions{
-    display:flex; gap:8px; padding:18px 16px 8px; flex-wrap:wrap;
-  }
-  .btn{
-    flex:1;
-    min-width:90px;
-    border:none;
-    border-radius:12px;
-    padding:12px;
-    font-size:14px;
-    font-weight:600;
-    text-align:center;
-  }
-  .btn.primary{background:var(--blue); color:#fff;}
-  .btn.secondary{background:var(--card); color:var(--blue);}
-  .btn.danger{background:var(--card); color:var(--red);}
-  .footer-note{
-    font-size:12px; color:var(--sub); text-align:center; padding:4px 24px 4px;
-    line-height:1.5;
-  }
+  .card-actions{display:flex; gap:8px; padding:14px 16px; border-top:1px solid var(--sep);}
+  .mini-btn{flex:1; border:none; border-radius:12px; padding:10px; font-size:13px; font-weight:700; background:#f7f1ea; color:var(--text);}
+  .mini-btn.share{color:var(--teal); background:#e6f8f5;}
+  .mini-btn.dup{color:var(--purple); background:#f1efff;}
+  .mini-btn.del{color:var(--red); background:#ffecec;}
+
+  .footer-actions{display:flex; gap:8px; padding:18px 16px 8px; flex-wrap:wrap;}
+  .btn{flex:1; min-width:90px; border:none; border-radius:14px; padding:12px; font-size:14px; font-weight:700; text-align:center;}
+  .btn.primary{background:var(--peach); color:#fff;}
+  .btn.secondary{background:var(--card); border:1.5px solid var(--sep); color:var(--text);}
+  .btn.danger{background:var(--card); border:1.5px solid var(--sep); color:var(--red);}
+  .footer-note{font-size:12px; color:var(--sub); text-align:center; padding:4px 24px 4px; line-height:1.5;}
   #fileInput{display:none;}
-  .empty{
-    text-align:center; color:var(--sub); font-size:14px; padding:40px 20px;
+  .empty{text-align:center; color:var(--sub); font-size:14px; padding:40px 20px;}
+
+  @media (max-width:359px){
+    header{padding-left:14px; padding-right:14px;}
+    .stats, .toolbar, .list, .footer-actions{padding-left:12px; padding-right:12px;}
+    .stats{grid-template-columns:1fr 1fr; gap:8px;}
+    .stat{padding:12px;}
+    .stat .value{font-size:18px;}
+    .grid{grid-template-columns:1fr; padding:12px;}
+    .card-quick{padding-left:60px;}
+    .stock-panel{flex-direction:column; align-items:flex-start; gap:14px;}
+    .stock-panel > div:last-child{width:100%; justify-content:space-between; display:flex;}
+  }
+  @media (min-width:600px){
+    body{max-width:520px; margin:0 auto;}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Ли Сян — товары</h1>
+  <h1>🧡 Ли Сян — товары</h1>
   <p class="subtitle"><span id="subtitle">14 товаров</span><span class="saved-badge" id="savedBadge">✓ сохранено</span></p>
 </header>
+
+<div id="alertBox"></div>
 
 <div class="stats" id="stats"></div>
 
 <div class="toolbar">
   <input class="search" id="search" placeholder="Поиск по названию..." />
   <button class="iconbtn" id="addBtn" title="Добавить товар">＋</button>
+</div>
+
+<div class="chips" id="chips">
+  <button class="chip active" data-filter="all">Все</button>
+  <button class="chip" data-filter="instock">В наличии</button>
+  <button class="chip" data-filter="out">Закончились</button>
+  <button class="chip" data-filter="profit">Прибыльные ↓</button>
 </div>
 
 <div class="section-label">Товары</div>
@@ -240,29 +176,41 @@
   <button class="btn danger" id="resetBtn">Сбросить</button>
 </div>
 <input type="file" id="fileInput" accept="application/json">
-<p class="footer-note">Все изменения считаются и сохраняются автоматически в этом браузере на этом устройстве. Чтобы перенести данные на другой телефон/компьютер — «Экспорт» здесь, затем «Импорт» там.</p>
+<p class="footer-note">Изменения считаются и сохраняются автоматически в этом браузере на этом устройстве. Чтобы перенести данные на другой телефон — «Экспорт» здесь, «Импорт» там.</p>
 
 <script>
-const STORAGE_KEY = 'lisyang_dashboard_v2';
+const STORAGE_KEY = 'lisyang_dashboard_v3';
 
 const RAW_DATA = [
-{id:1, code:'Код 1', name:'Полики в багажник', kaspi:'Защита багажника', variant:'', note:'проверить', price:40000, qty:3, costYuan:390, rate:70, weight:8200, tariff:1800, deliveryExtra:2000, packaging:100, received:3, sold:0},
-{id:2, code:'Код 2', name:'Сетка в багажник', kaspi:'Сетка', variant:'', note:'', price:9900, qty:3, costYuan:78, rate:70, weight:1100, tariff:1800, deliveryExtra:1000, packaging:100, received:3, sold:0},
-{id:3, code:'Код 3', name:'Силиконовые формы в холодильник 3 штуки в комплекте', kaspi:'Органайзер в холодильник', variant:'', note:'', price:11500, qty:2, costYuan:63, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:4, code:'Код 4', name:'Защита для холодильника внешняя', kaspi:'', variant:'черный', note:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:5, code:'Код 5', name:'Защита для холодильника внешняя', kaspi:'', variant:'оранжевый', note:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:6, code:'Код 6', name:'Пепельница', kaspi:'', variant:'пластик', note:'проверить', price:3000, qty:2, costYuan:19, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, received:2, sold:0},
-{id:7, code:'Код 7', name:'Накладки на педали 3 штуки в комплекте', kaspi:'', variant:'металл', note:'', price:15000, qty:2, costYuan:129, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:8, code:'Код 8', name:'Набор наппа для ухода за кожей', kaspi:'', variant:'', note:'проверить', price:7000, qty:2, costYuan:63, rate:70, weight:1100, tariff:1800, deliveryExtra:500, packaging:100, received:2, sold:0},
-{id:9, code:'Код 9', name:'Визитница', kaspi:'', variant:'металл', note:'проверить', price:5000, qty:4, costYuan:47, rate:70, weight:400, tariff:1800, deliveryExtra:500, packaging:100, received:4, sold:0},
-{id:10, code:'Код 10', name:'Колпачки на колесные гайки с наклейками Ли', kaspi:'', variant:'АВС пластик', note:'', price:5000, qty:3, costYuan:54, rate:70, weight:230, tariff:1800, deliveryExtra:500, packaging:100, received:3, sold:0},
-{id:11, code:'Код 11', name:'Магнитные крышки в порт зарядки', kaspi:'', variant:'', note:'', price:5000, qty:3, costYuan:36, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, received:3, sold:0},
-{id:12, code:'Код 12', name:'Подлокотники на скотче', kaspi:'', variant:'черный', note:'', price:9900, qty:2, costYuan:96, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:13, code:'Код 13', name:'Подлокотники на резинке', kaspi:'', variant:'оранжевый', note:'', price:15000, qty:2, costYuan:168, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
-{id:14, code:'Код 14', name:'Силиконовые накладки на дверной замок 4 штуки в комплекте', kaspi:'', variant:'', note:'', price:8000, qty:3, costYuan:54, rate:70, weight:200, tariff:1800, deliveryExtra:1000, packaging:100, received:3, sold:0},
+{id:1, code:'Код 1', name:'Полики в багажник', kaspi:'Защита багажника', variant:'', note:'проверить', link:'', icon:'', price:40000, qty:3, costYuan:390, rate:70, weight:8200, tariff:1800, deliveryExtra:2000, packaging:100, received:3, sold:0},
+{id:2, code:'Код 2', name:'Сетка в багажник', kaspi:'Сетка', variant:'', note:'', link:'', icon:'', price:9900, qty:3, costYuan:78, rate:70, weight:1100, tariff:1800, deliveryExtra:1000, packaging:100, received:3, sold:0},
+{id:3, code:'Код 3', name:'Силиконовые формы в холодильник 3 штуки в комплекте', kaspi:'Органайзер в холодильник', variant:'', note:'', link:'', icon:'', price:11500, qty:2, costYuan:63, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:4, code:'Код 4', name:'Защита для холодильника внешняя', kaspi:'', variant:'черный', note:'', link:'', icon:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:5, code:'Код 5', name:'Защита для холодильника внешняя', kaspi:'', variant:'оранжевый', note:'', link:'', icon:'', price:9000, qty:2, costYuan:70, rate:70, weight:900, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:6, code:'Код 6', name:'Пепельница', kaspi:'', variant:'пластик', note:'проверить', link:'', icon:'', price:3000, qty:2, costYuan:19, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, received:2, sold:0},
+{id:7, code:'Код 7', name:'Накладки на педали 3 штуки в комплекте', kaspi:'', variant:'металл', note:'', link:'', icon:'', price:15000, qty:2, costYuan:129, rate:70, weight:1500, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:8, code:'Код 8', name:'Набор наппа для ухода за кожей', kaspi:'', variant:'', note:'проверить', link:'', icon:'', price:7000, qty:2, costYuan:63, rate:70, weight:1100, tariff:1800, deliveryExtra:500, packaging:100, received:2, sold:0},
+{id:9, code:'Код 9', name:'Визитница', kaspi:'', variant:'металл', note:'проверить', link:'', icon:'', price:5000, qty:4, costYuan:47, rate:70, weight:400, tariff:1800, deliveryExtra:500, packaging:100, received:4, sold:0},
+{id:10, code:'Код 10', name:'Колпачки на колесные гайки с наклейками Ли', kaspi:'', variant:'АВС пластик', note:'', link:'', icon:'', price:5000, qty:3, costYuan:54, rate:70, weight:230, tariff:1800, deliveryExtra:500, packaging:100, received:3, sold:0},
+{id:11, code:'Код 11', name:'Магнитные крышки в порт зарядки', kaspi:'', variant:'', note:'', link:'', icon:'', price:5000, qty:3, costYuan:36, rate:70, weight:300, tariff:1800, deliveryExtra:500, packaging:100, received:3, sold:0},
+{id:12, code:'Код 12', name:'Подлокотники на скотче', kaspi:'', variant:'черный', note:'', link:'', icon:'', price:9900, qty:2, costYuan:96, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:13, code:'Код 13', name:'Подлокотники на резинке', kaspi:'', variant:'оранжевый', note:'', link:'', icon:'', price:15000, qty:2, costYuan:168, rate:70, weight:850, tariff:1800, deliveryExtra:1000, packaging:100, received:2, sold:0},
+{id:14, code:'Код 14', name:'Силиконовые накладки на дверной замок 4 штуки в комплекте', kaspi:'', variant:'', note:'', link:'', icon:'', price:8000, qty:3, costYuan:54, rate:70, weight:200, tariff:1800, deliveryExtra:1000, packaging:100, received:3, sold:0},
 ];
 
-// --- storage (guarded: works when self-hosted, degrades quietly inside sandboxed previews) ---
+const ICON_RULES = [
+  [/багажник/i,'🧳'], [/сетк/i,'🕸️'], [/холодильник/i,'❄️'], [/пепельниц/i,'🚬'],
+  [/педал/i,'🦶'], [/кож|наппа/i,'🧴'], [/визитниц/i,'🪪'], [/колпач|колес|гайк/i,'🔩'],
+  [/крышк|зарядк/i,'🔌'], [/подлокотник/i,'💺'], [/замок|двер/i,'🔒'],
+];
+function autoIcon(name){
+  for(const [re, ic] of ICON_RULES){ if(re.test(name)) return ic; }
+  return '📦';
+}
+function iconFor(item){ return item.icon || autoIcon(item.name); }
+function colorClass(item){ return ['','c-teal','c-purple'][(item.id - 1) % 3]; }
+
+// --- storage (guarded: works fully when self-hosted; degrades quietly in sandboxed previews) ---
 function safeLoad(){
   try{
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -270,7 +218,7 @@ function safeLoad(){
       const parsed = JSON.parse(raw);
       if(Array.isArray(parsed) && parsed.length) return parsed;
     }
-  }catch(e){ /* storage unavailable in this environment — fall back to defaults */ }
+  }catch(e){ /* storage unavailable here — fall back to defaults */ }
   return JSON.parse(JSON.stringify(RAW_DATA));
 }
 let saveTimer = null;
@@ -281,27 +229,36 @@ function safeSave(){
     badge.classList.add('show');
     clearTimeout(saveTimer);
     saveTimer = setTimeout(()=>badge.classList.remove('show'), 1200);
-  }catch(e){ /* no persistent storage available here — data stays in memory only */ }
+  }catch(e){ /* no persistent storage available — data stays in memory only */ }
 }
 
 let data = safeLoad();
 let openId = null;
+let filterMode = 'all';
 
 const fmt = n => Math.round(n).toLocaleString('ru-RU');
 const remaining = item => Math.max(0, (item.received||0) - (item.sold||0));
 
 function calc(item){
-  const p = item.qty > 0 ? Math.round(item.costYuan / item.qty) : 0;           // цена за ед, юань
-  const r = Math.round(p * item.rate);                                        // закупочная цена за ед, тенге
-  const u = Math.round((item.weight / 1000) * item.tariff);                   // стоимость доставки всего
-  const v = item.qty > 0 ? Math.round(u / item.qty) : 0;                      // доставка за ед
-  const y = Math.round(item.price * 0.12);                                    // комиссия 12%
-  const z = Math.round(item.price * 0.01);                                    // платежи 1%
-  const ab = Math.round(item.price * 0.04);                                   // налог 4%
-  const n = r + v + item.deliveryExtra + item.packaging + y + z + ab;         // себестоимость
-  const i = item.price - n;                                                   // прибыль, тенге
-  const h = item.price > 0 ? Math.round((i / item.price) * 100) : 0;          // прибыль, %
+  const p = item.qty > 0 ? Math.round(item.costYuan / item.qty) : 0;
+  const r = Math.round(p * item.rate);
+  const u = Math.round((item.weight / 1000) * item.tariff);
+  const v = item.qty > 0 ? Math.round(u / item.qty) : 0;
+  const y = Math.round(item.price * 0.12);
+  const z = Math.round(item.price * 0.01);
+  const ab = Math.round(item.price * 0.04);
+  const n = r + v + item.deliveryExtra + item.packaging + y + z + ab;
+  const i = item.price - n;
+  const h = item.price > 0 ? Math.round((i / item.price) * 100) : 0;
   return {p, r, u, v, y, z, ab, n, i, h};
+}
+
+function renderAlert(){
+  const outCount = data.filter(x => remaining(x) === 0).length;
+  const box = document.getElementById('alertBox');
+  box.innerHTML = outCount > 0
+    ? `<div class="alert">⚠️ ${outCount} ${outCount===1?'товар закончился':'товара(ов) закончились'} — пора пополнить склад</div>`
+    : '';
 }
 
 function renderStats(){
@@ -314,12 +271,13 @@ function renderStats(){
     totalRevenueSold += x.price * (x.sold||0);
   });
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="label">Остаток на складе</div><div class="value blue">${totalRemaining} шт</div></div>
-    <div class="stat"><div class="label">Продано всего</div><div class="value">${totalSold} шт</div></div>
-    <div class="stat"><div class="label">Потенциальная прибыль</div><div class="value green">${fmt(totalProfitPotential)} ₸</div></div>
-    <div class="stat"><div class="label">Выручка от продаж</div><div class="value">${fmt(totalRevenueSold)} ₸</div></div>
+    <div class="stat c1"><div class="icon">📦</div><div class="label">Остаток на складе</div><div class="value">${totalRemaining} шт</div></div>
+    <div class="stat c2"><div class="icon">🛒</div><div class="label">Продано всего</div><div class="value">${totalSold} шт</div></div>
+    <div class="stat c3"><div class="icon">💰</div><div class="label">Потенциальная прибыль</div><div class="value">${fmt(totalProfitPotential)} ₸</div></div>
+    <div class="stat c4"><div class="icon">📈</div><div class="label">Выручка от продаж</div><div class="value">${fmt(totalRevenueSold)} ₸</div></div>
   `;
   document.getElementById('subtitle').textContent = `${data.length} товаров · ${totalRemaining} шт в наличии`;
+  renderAlert();
 }
 
 function fieldRow(label, key, item, readonly){
@@ -329,11 +287,25 @@ function fieldRow(label, key, item, readonly){
     <input type="${readonly?'text':'number'}" inputmode="decimal" data-key="${key}" ${readonly?'readonly':''} value="${val}">
   </div>`;
 }
+function textFieldRow(label, key, item, wide){
+  return `<div class="field ${wide?'wide':''}">
+    <label>${label}</label>
+    <input type="text" data-key="${key}" data-text="1" value="${(item[key]||'').toString().replace(/"/g,'&quot;')}">
+  </div>`;
+}
+
+function applyFilter(list){
+  if(filterMode === 'instock') return list.filter(x => remaining(x) > 0);
+  if(filterMode === 'out') return list.filter(x => remaining(x) === 0);
+  if(filterMode === 'profit') return [...list].sort((a,b)=> calc(b).h - calc(a).h);
+  return list;
+}
 
 function renderList(){
   const q = document.getElementById('search').value.trim().toLowerCase();
   const listEl = document.getElementById('list');
-  const filtered = data.filter(x => (x.name + ' ' + x.variant + ' ' + x.kaspi).toLowerCase().includes(q));
+  let filtered = data.filter(x => (x.name + ' ' + x.variant + ' ' + x.kaspi).toLowerCase().includes(q));
+  filtered = applyFilter(filtered);
   if(!filtered.length){
     listEl.innerHTML = `<div class="empty">Ничего не найдено</div>`;
     return;
@@ -343,9 +315,10 @@ function renderList(){
     const rem = remaining(item);
     const isOpen = openId === item.id;
     return `
-    <div class="card ${isOpen?'open':''}" data-id="${item.id}">
+    <div class="card ${colorClass(item)} ${isOpen?'open':''}" data-id="${item.id}">
       <div class="card-head" data-toggle="${item.id}">
-        <div>
+        <div class="emoji">${iconFor(item)}</div>
+        <div class="titles">
           <div class="name">${item.name}${item.variant ? ' · ' + item.variant : ''}</div>
           <div class="variant">${item.code}${item.note ? ' · ' + item.note : ''}</div>
         </div>
@@ -356,6 +329,7 @@ function renderList(){
         <span class="pill profit">${c.h}% · ${fmt(c.i)} ₸/шт</span>
         <span class="pill ${rem===0?'stock0':''}">Остаток: ${rem}</span>
         <span class="pill">Продано: ${item.sold||0}</span>
+        ${item.link ? `<span class="pill link">🔗 Kaspi</span>` : ''}
       </div>
       <div class="card-body">
         <div class="stock-panel">
@@ -364,14 +338,14 @@ function renderList(){
             <div class="remaining ${rem===0?'zero':''}">${rem} шт</div>
           </div>
           <div style="display:flex; gap:14px;">
-            <div class="stepper">
+            <div>
               <div class="stepper-label">Продажа</div>
               <div style="display:flex; gap:6px;">
                 <button class="stepbtn" data-act="sale-minus">−</button>
                 <button class="stepbtn" data-act="sale-plus">+</button>
               </div>
             </div>
-            <div class="stepper">
+            <div>
               <div class="stepper-label">Приход</div>
               <div style="display:flex; gap:6px;">
                 <button class="stepbtn receive" data-act="receive-plus">+</button>
@@ -387,6 +361,8 @@ function renderList(){
           <div class="divider-label">Продажа</div>
           ${fieldRow('Цена продажи, ₸','price',item,false)}
           ${fieldRow('Количество в закупке','qty',item,false)}
+          ${textFieldRow('Ссылка на Kaspi','link',item,true)}
+          ${textFieldRow('Иконка (эмодзи)','icon',item,false)}
 
           <div class="divider-label">Закупка</div>
           ${fieldRow('Стоимость закупки, ¥','costYuan',item,false)}
@@ -410,6 +386,11 @@ function renderList(){
         <div class="summary-row"><span class="l">Себестоимость</span><span class="r">${fmt(c.n)} ₸</span></div>
         <div class="summary-row"><span class="l">Прибыль с единицы</span><span class="r green">${fmt(c.i)} ₸ (${c.h}%)</span></div>
         <div class="summary-row"><span class="l">Выручка от продаж</span><span class="r">${fmt(item.price*(item.sold||0))} ₸</span></div>
+        <div class="card-actions">
+          <button class="mini-btn share" data-act="share">↗ Поделиться</button>
+          <button class="mini-btn dup" data-act="duplicate">⧉ Копировать</button>
+          <button class="mini-btn del" data-act="delete">🗑 Удалить</button>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -420,35 +401,26 @@ function render(){
   renderList();
 }
 
-function refreshCard(card, item){
+function shareItem(item){
   const c = calc(item);
   const rem = remaining(item);
-
-  const quick = card.querySelector('.card-quick');
-  quick.innerHTML = `
-    <span class="pill">${fmt(item.price)} ₸</span>
-    <span class="pill profit">${c.h}% · ${fmt(c.i)} ₸/шт</span>
-    <span class="pill ${rem===0?'stock0':''}">Остаток: ${rem}</span>
-    <span class="pill">Продано: ${item.sold||0}</span>
-  `;
-
-  const remEl = card.querySelector('.remaining');
-  if(remEl){ remEl.textContent = rem + ' шт'; remEl.classList.toggle('zero', rem===0); }
-
-  const receivedInput = card.querySelector('input[data-key="received"]');
-  if(receivedInput && document.activeElement !== receivedInput) receivedInput.value = item.received;
-  const soldInput = card.querySelector('input[data-key="sold"]');
-  if(soldInput && document.activeElement !== soldInput) soldInput.value = item.sold;
-
-  const readonlyInputs = card.querySelectorAll('.field.readonly input');
-  const vals = [c.p, fmt(c.r), fmt(c.u), fmt(c.v), fmt(c.y), fmt(c.z), fmt(c.ab)];
-  readonlyInputs.forEach((el,idx)=>{ if(vals[idx]!==undefined) el.value = vals[idx]; });
-
-  const summaryVals = card.querySelectorAll('.summary-row .r');
-  summaryVals[0].textContent = fmt(c.n) + ' ₸';
-  summaryVals[1].textContent = fmt(c.i) + ' ₸ (' + c.h + '%)';
-  summaryVals[2].textContent = fmt(item.price*(item.sold||0)) + ' ₸';
+  const text = `${item.name}${item.variant ? ' · ' + item.variant : ''}\nЦена: ${fmt(item.price)} ₸\nВ наличии: ${rem} шт${item.link ? '\n' + item.link : ''}`;
+  if(navigator.share){
+    navigator.share({title:item.name, text}).catch(()=>{});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(text).then(()=>alert('Скопировано в буфер обмена')).catch(()=>alert(text));
+  } else {
+    alert(text);
+  }
 }
+
+document.getElementById('chips').addEventListener('click', (e)=>{
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  filterMode = chip.dataset.filter;
+  document.querySelectorAll('.chip').forEach(c=>c.classList.toggle('active', c===chip));
+  renderList();
+});
 
 document.getElementById('list').addEventListener('click', (e)=>{
   const head = e.target.closest('[data-toggle]');
@@ -459,23 +431,44 @@ document.getElementById('list').addEventListener('click', (e)=>{
     return;
   }
   const actBtn = e.target.closest('[data-act]');
-  if(actBtn){
-    const card = e.target.closest('.card');
-    const id = Number(card.dataset.id);
-    const item = data.find(x=>x.id===id);
-    const act = actBtn.dataset.act;
-    if(act === 'sale-plus'){
-      if(remaining(item) > 0){ item.sold = (item.sold||0) + 1; }
-    } else if(act === 'sale-minus'){
-      item.sold = Math.max(0, (item.sold||0) - 1);
-    } else if(act === 'receive-plus'){
-      const val = window.prompt('Сколько штук пришло на склад?', '1');
-      const n = parseInt(val, 10);
-      if(!isNaN(n) && n > 0){ item.received = (item.received||0) + n; }
+  if(!actBtn) return;
+  const card = e.target.closest('.card');
+  const id = Number(card.dataset.id);
+  const item = data.find(x=>x.id===id);
+  const act = actBtn.dataset.act;
+
+  if(act === 'sale-plus'){
+    if(remaining(item) > 0) item.sold = (item.sold||0) + 1;
+    renderStats(); renderList(); safeSave(); return;
+  }
+  if(act === 'sale-minus'){
+    item.sold = Math.max(0, (item.sold||0) - 1);
+    renderStats(); renderList(); safeSave(); return;
+  }
+  if(act === 'receive-plus'){
+    const val = window.prompt('Сколько штук пришло на склад?', '1');
+    const n = parseInt(val, 10);
+    if(!isNaN(n) && n > 0) item.received = (item.received||0) + n;
+    renderStats(); renderList(); safeSave(); return;
+  }
+  if(act === 'share'){ shareItem(item); return; }
+  if(act === 'duplicate'){
+    const newId = Math.max(0, ...data.map(x=>x.id)) + 1;
+    const clone = JSON.parse(JSON.stringify(item));
+    clone.id = newId; clone.code = 'Код ' + newId;
+    clone.name = item.name + ' (копия)';
+    clone.received = 0; clone.sold = 0;
+    data.push(clone);
+    openId = newId;
+    render(); safeSave(); return;
+  }
+  if(act === 'delete'){
+    if(window.confirm('Удалить «' + item.name + '»?')){
+      data = data.filter(x=>x.id!==id);
+      if(openId === id) openId = null;
+      render(); safeSave();
     }
-    renderStats();
-    refreshCard(card, item);
-    safeSave();
+    return;
   }
 });
 
@@ -486,10 +479,34 @@ document.getElementById('list').addEventListener('input', (e)=>{
   const id = Number(card.dataset.id);
   const item = data.find(x=>x.id===id);
   const key = input.dataset.key;
-  const num = parseFloat(input.value.replace(',', '.'));
-  item[key] = isNaN(num) ? 0 : num;
+  if(input.dataset.text){
+    item[key] = input.value;
+    if(key === 'icon'){ renderStats(); renderList(); safeSave(); return; }
+  } else {
+    const num = parseFloat(input.value.replace(',', '.'));
+    item[key] = isNaN(num) ? 0 : num;
+  }
   renderStats();
-  refreshCard(card, item);
+  // refresh just this card's derived fields without losing focus
+  const c = calc(item);
+  const rem = remaining(item);
+  const quick = card.querySelector('.card-quick');
+  quick.innerHTML = `
+    <span class="pill">${fmt(item.price)} ₸</span>
+    <span class="pill profit">${c.h}% · ${fmt(c.i)} ₸/шт</span>
+    <span class="pill ${rem===0?'stock0':''}">Остаток: ${rem}</span>
+    <span class="pill">Продано: ${item.sold||0}</span>
+    ${item.link ? `<span class="pill link">🔗 Kaspi</span>` : ''}
+  `;
+  const remEl = card.querySelector('.remaining');
+  if(remEl){ remEl.textContent = rem + ' шт'; remEl.classList.toggle('zero', rem===0); }
+  const readonlyInputs = card.querySelectorAll('.field.readonly input');
+  const vals = [c.p, fmt(c.r), fmt(c.u), fmt(c.v), fmt(c.y), fmt(c.z), fmt(c.ab)];
+  readonlyInputs.forEach((el,idx)=>{ if(vals[idx]!==undefined) el.value = vals[idx]; });
+  const summaryVals = card.querySelectorAll('.summary-row .r');
+  summaryVals[0].textContent = fmt(c.n) + ' ₸';
+  summaryVals[1].textContent = fmt(c.i) + ' ₸ (' + c.h + '%)';
+  summaryVals[2].textContent = fmt(item.price*(item.sold||0)) + ' ₸';
   safeSave();
 });
 
@@ -499,11 +516,8 @@ document.getElementById('exportBtn').addEventListener('click', ()=>{
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-  a.href = url;
-  a.download = 'lisyang_tovary.json';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
+  a.href = url; a.download = 'lisyang_tovary.json';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
   URL.revokeObjectURL(url);
 });
 
@@ -526,17 +540,15 @@ document.getElementById('fileInput').addEventListener('change', (e)=>{
 document.getElementById('resetBtn').addEventListener('click', ()=>{
   if(window.confirm('Сбросить все изменения к исходным данным?')){
     data = JSON.parse(JSON.stringify(RAW_DATA));
-    safeSave();
-    render();
+    safeSave(); render();
   }
 });
 
 document.getElementById('addBtn').addEventListener('click', ()=>{
   const newId = Math.max(0, ...data.map(x=>x.id)) + 1;
-  data.push({id:newId, code:'Код '+newId, name:'Новый товар', kaspi:'', variant:'', note:'', price:0, qty:1, costYuan:0, rate:70, weight:0, tariff:1800, deliveryExtra:0, packaging:100, received:0, sold:0});
+  data.push({id:newId, code:'Код '+newId, name:'Новый товар', kaspi:'', variant:'', note:'', link:'', icon:'', price:0, qty:1, costYuan:0, rate:70, weight:0, tariff:1800, deliveryExtra:0, packaging:100, received:0, sold:0});
   openId = newId;
-  safeSave();
-  render();
+  safeSave(); render();
 });
 
 render();
