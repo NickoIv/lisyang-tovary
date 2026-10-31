@@ -1,0 +1,40 @@
+name: Promote original-look Lixiang shop
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/promote-original-lixiang.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  promote:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Promote verified original visual design
+        run: |
+          set -eu
+          test -s shop/replica/index.html
+          test -s shop/replica/styles.css
+          test -s shop/replica/app.js
+          test "$(find shop/replica/assets/products -name '*.jpg' | wc -l)" -eq 45
+          cp shop/replica/index.html shop/index.html
+          cp shop/replica/styles.css shop/styles.css
+          cp shop/replica/app.js shop/app.js
+          mkdir -p shop/assets/products
+          cp shop/replica/assets/products/*.jpg shop/assets/products/
+          if grep -qE 'lovable-badge|__l5e|lovable.app' shop/index.html; then
+            echo "Unexpected original-host dependency"; exit 1
+          fi
+      - name: Publish storefront without changing inventory app
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A shop/index.html shop/styles.css shop/app.js shop/assets/products
+          if git diff --cached --quiet; then
+            echo "Published files already match replica"
+          else
+            git commit -m "feat(shop): restore original Lovable look on independent GitHub Pages"
+            git push origin HEAD:main
+          fi
