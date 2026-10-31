@@ -2,7 +2,7 @@ name: Promote original-look Lixiang shop
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/promote-original-lixiang.yml']
+    paths: ['.github/workflows/promote-original-lixiang.yml', 'shop/replica/index.html']
   workflow_dispatch:
 permissions:
   contents: write
