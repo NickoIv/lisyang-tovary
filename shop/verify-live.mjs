@@ -50,6 +50,7 @@ for (const viewport of [{width:390,height:844},{width:1365,height:900}]) {
   assert.equal(await page.locator("#cart-count").innerText(), "0");
   const horizontal = await page.evaluate(() => { window.scrollTo({left:250,top:0,behavior:"instant"}); const scrollX=window.scrollX; window.scrollTo({left:0,top:0,behavior:"instant"}); return {scrollX, scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth}; });
   console.log("HORIZONTAL SCROLL TEST",JSON.stringify(horizontal));
+  console.log("OUTSIDE VIEWPORT",JSON.stringify(await page.evaluate(() => [...document.querySelectorAll("body *")].map(e => { const r=e.getBoundingClientRect();return {tag:e.tagName.toLowerCase(),class:e.className?.baseVal??e.className,id:e.id,left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width)}; }).filter(x=>x.right>innerWidth+3 && x.width>0).sort((a,b)=>b.right-a.right).slice(0,14))));
   assert.equal(horizontal.scrollX, 0, "Page can scroll horizontally");
   await page.locator(".product-add").first().click();
   assert.equal(await page.locator("#cart-count").innerText(), "1");
