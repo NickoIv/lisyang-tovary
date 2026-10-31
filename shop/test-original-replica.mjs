@@ -2,7 +2,7 @@ import {chromium} from "playwright";
 import assert from "node:assert/strict";
 import {mkdir} from "node:fs/promises";
 const b=await chromium.launch({headless:true,args:["--no-sandbox"]});
-const url="http://127.0.0.1:8788/shop/replica/";
+const url=process.env.SHOP_TEST_URL||"http://127.0.0.1:8788/shop/replica/";
 await mkdir("shop/reference",{recursive:true});
 for(const [label,width,height] of [["replica-mobile",390,844],["replica",1440,900]]){
  const page=await b.newPage({viewport:{width,height},deviceScaleFactor:1});
