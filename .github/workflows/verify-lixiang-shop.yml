@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/verify-lixiang-shop.yml'
+      - 'shop/verify-live.mjs'
   workflow_dispatch:
 permissions:
   contents: read
