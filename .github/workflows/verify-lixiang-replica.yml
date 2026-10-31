@@ -2,7 +2,7 @@ name: Verify original-style replica
 on:
   push:
     branches: [main]
-    paths: ['.github/workflows/verify-lixiang-replica.yml']
+    paths: ['.github/workflows/verify-lixiang-replica.yml', 'shop/test-original-replica.mjs']
   workflow_dispatch:
 permissions:
   contents: write
