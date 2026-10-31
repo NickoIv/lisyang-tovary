@@ -1,6 +1,7 @@
 (() => {
 "use strict";
 const phone="77017233633";
+document.querySelectorAll('a[href="/admin"]').forEach(a=>{a.removeAttribute("href");a.setAttribute("aria-disabled","true");a.title="Админ-панель пока не подключена";});
 const cards=[...document.querySelectorAll("#catalog article")];
 const products=cards.map((card,id)=>{
  const title=card.querySelector("h3")?.textContent?.trim()||"Товар";
