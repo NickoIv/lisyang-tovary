@@ -1,0 +1,24 @@
+name: Verify independent Lixiang shop
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-lixiang-shop.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test-live-site:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated browser test dependency
+        run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test product photos, catalog, cart, checkout and mobile layout
+        run: node shop/verify-live.mjs
