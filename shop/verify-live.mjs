@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { chromium } from "playwright";
+import { createHash } from "node:crypto";
 
 const url = "https://nickoiv.github.io/lisyang-tovary/shop/";
 let response, pageHtml;
@@ -14,6 +15,8 @@ for (let attempt = 1; attempt <= 15; attempt++) {
 }
 assert.equal(response.status, 200);
 assert(pageHtml.includes("LIXIANG"));
+const scripts=[...pageHtml.matchAll(/<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/g)];
+console.log("LIVE JS SHA256:",createHash("sha256").update(scripts.at(-1)[1]).digest("base64"));
 assert(!pageHtml.includes("shop-magic-maker-82.lovable.app"), "Images still depend on Lovable");
 const match = pageHtml.match(/<script id="embedded-catalog" type="application\/json">([\s\S]*?)<\/script>/);
 assert(match, "Embedded catalog unavailable");
@@ -38,8 +41,11 @@ for (const viewport of [{width:390,height:844},{width:1365,height:900}]) {
   const page = await context.newPage();
   const errors=[];
   page.on("pageerror", e => errors.push(String(e)));
+  page.on("console", msg => { if(msg.type()==="error") errors.push("console: "+msg.text()); });
   await page.goto(url, {waitUntil:"domcontentloaded"});
-  await page.locator(".product-card").first().waitFor({timeout:15000});
+  await page.waitForTimeout(1600);
+  console.log("BROWSER DEBUG:",JSON.stringify(await page.evaluate(() => ({cards:document.querySelectorAll(".product-card").length,result:document.querySelector("#result-count")?.textContent,body:document.body.innerText.slice(0,100)}))),"ERRORS",JSON.stringify(errors.slice(0,8)));
+  await page.locator(".product-card").first().waitFor({timeout:10000});
   assert.equal(await page.locator(".product-card").count(), 14);
   assert.equal(await page.locator("#cart-count").innerText(), "0");
   assert(!await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2), "Horizontal overflow");
