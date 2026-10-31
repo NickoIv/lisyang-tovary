@@ -1,0 +1,18 @@
+
+#lovable-badge{display:none!important}
+#replica-dialog{position:fixed;inset:0;background:rgba(20,18,16,.56);z-index:100;display:flex;align-items:center;justify-content:center;padding:16px}
+#replica-dialog[hidden]{display:none}
+#replica-dialog .rd-card{background:#fbf9f6;color:#29251e;width:min(100%,540px);max-height:94dvh;overflow:auto;border-radius:18px;padding:26px;box-shadow:0 20px 80px #0004}
+#replica-dialog h3{font-family:"Cormorant Garamond",Georgia,serif;font-size:32px;line-height:1.15;margin:8px 0 10px}
+#replica-dialog img{width:100%;max-height:250px;object-fit:contain;background:#f4f0e9;border-radius:12px}
+#replica-dialog input,#replica-dialog textarea{border:1px solid #ddd8d0;background:white;border-radius:10px;padding:11px 13px;width:100%;font:inherit;margin:6px 0}
+#replica-dialog button,#replica-cart-button{cursor:pointer}
+#replica-dialog .rd-main{border:0;border-radius:30px;padding:13px 17px;background:#97681f;color:white}
+#replica-dialog .rd-soft{border:1px solid #d6d0c7;border-radius:30px;padding:12px 16px;background:transparent}
+#replica-dialog .rd-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-top:16px}
+#replica-cart-button{position:fixed;left:16px;bottom:18px;z-index:45;border:1px solid #e1d9ce;background:#fbf9f6;color:#815716;padding:11px 17px;border-radius:99px;box-shadow:0 8px 30px #0002;font:500 13px Inter,sans-serif}
+#replica-cart-button[hidden]{display:none}
+#catalog button[aria-pressed="true"]{background:#97681f!important;color:#fff!important;border-color:#97681f!important}
+#catalog button[aria-pressed="false"]{background:#faf8f4!important;color:#6d6760!important;border-color:#e5dfd7!important}
+#replica-dialog .rd-qty{width:80px}
+@media(max-width:640px){#replica-cart-button{bottom:18px;left:12px;font-size:12px;padding:10px 14px}#replica-dialog .rd-card{padding:18px}}
