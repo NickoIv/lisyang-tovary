@@ -1,0 +1,24 @@
+name: Verify published original-look shop
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/verify-lixiang-production.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  live:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: |
+          npm install --no-save --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Verify production site with mobile and desktop Chromium
+        env:
+          SHOP_TEST_URL: https://nickoiv.github.io/lisyang-tovary/shop/
+        run: node shop/test-original-replica.mjs
