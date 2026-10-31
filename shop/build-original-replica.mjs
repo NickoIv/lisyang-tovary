@@ -24,6 +24,7 @@ const fetches=images.map(async ([url,file])=>{
 const copied=await Promise.all(fetches);
 for(const [url,file] of images)html=html.split(url).join("assets/products/"+file);
 html=html.replace(/<meta name="author" content="Lovable">/g,"").replace(/<meta name="twitter:site" content="@Lovable">/g,"");
+html=html.replace(/<meta(?: property="og:image"| name="twitter:image")[^>]*>/g,"");
 html=html.replace(/<link rel="modulepreload"[^>]*>/g,"");
 html=html.replace(/<link rel="stylesheet" href="\/assets\/styles-[^"]+\.css"[^>]*>/,'<link rel="stylesheet" href="styles.css">');
 html=html.replace(/<link rel="icon" href="\/favicon.ico"[^>]*>/,"");
