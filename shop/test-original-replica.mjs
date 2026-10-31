@@ -18,7 +18,7 @@ for(const [label,width,height] of [["replica-mobile",390,844],["replica",1440,90
  assert(loaded.every(x=>x.ok),JSON.stringify(loaded.filter(x=>!x.ok)));
  const scroll=await page.evaluate(()=>{scrollTo(200,0);const x=scrollX;scrollTo(0,0);return x;});
  assert.equal(scroll,0,"Horizontal overflow");
- const filters=page.locator("#catalog > div button");
+ const filters=page.locator("#catalog > div.glass button");
  assert.equal(await filters.count(),3);
  await filters.nth(1).click();
  const count=await page.locator("#catalog article:visible").count();
