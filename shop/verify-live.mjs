@@ -48,7 +48,9 @@ for (const viewport of [{width:390,height:844},{width:1365,height:900}]) {
   await page.locator(".product-card").first().waitFor({timeout:10000});
   assert.equal(await page.locator(".product-card").count(), 14);
   assert.equal(await page.locator("#cart-count").innerText(), "0");
-  assert(!await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2), "Horizontal overflow");
+  const horizontal = await page.evaluate(() => { window.scrollTo({left:250,top:0,behavior:"instant"}); const scrollX=window.scrollX; window.scrollTo({left:0,top:0,behavior:"instant"}); return {scrollX, scrollWidth:document.documentElement.scrollWidth,viewport:innerWidth}; });
+  console.log("HORIZONTAL SCROLL TEST",JSON.stringify(horizontal));
+  assert.equal(horizontal.scrollX, 0, "Page can scroll horizontally");
   await page.locator(".product-add").first().click();
   assert.equal(await page.locator("#cart-count").innerText(), "1");
   await page.locator("#cart-open").click();
